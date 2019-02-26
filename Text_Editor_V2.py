@@ -4,40 +4,47 @@ from tkinter import ttk as tk1
 
 """ This function is used to save or read a file and use text box as medium to
 display content of the file."""
-def __commit__(file, com, data=None, obj=None):
-    global FILE
+def __commit__(file, com,data=None, obj=None):
+    global FILE,LIST
+    if file not in LIST:
+       LIST.append(file)
     fi_1 = open(file, com)
     if com == 'w':
         FILE = file
         global FONT, SIZE
         list1 = [FONT, SIZE]
-        for line in list1:
-            line = line.replace('\n', '')
-            fi_1.write(line+"\n")
+        if ".txt" in FILE: 
+            for line in list1:
+                line = line.replace('\n', '')
+                fi_1.write(line+"\n")
         fi_1.write(data.get("1.0", tk.END))                
     elif com == 'r':
         data.delete('1.0', tk.END)
         FILE = file
         lines = fi_1.readlines()
-        print(lines)
+        #print(lines)
         for i in range(2, len(lines)):
             data.insert(tk.END, lines[i])
 
-        if data is not None:
+        if (data is not None) and (".txt" in FILE) :
             __setf__(lines[0], lines[1], data)
+        else:
+            __setf__("Arial","20",data)
     if obj is not None:
         obj.destroy()
 
 #This function is to open a file and display through text box.
 def __open__(data):
     open_wd = Tk()
-    open_wd.geometry('300x150')
+    open_wd.geometry('400x150')
     open_wd.title("Open")
 
     lbl1 = Label(open_wd, text='Path:')
     lbl1.place(x=20, y=20)
 
-    path = Entry(open_wd, width=25)
+    path= tk1.Combobox(open_wd,width=40)
+    path['values'] =tuple(LIST)
+    path.current()
     path.configure(font='Arial 10')
     path.place(x=60, y=20)
 
@@ -49,24 +56,29 @@ def __open__(data):
     prtype.current(0)
     prtype.place(x=60, y=50)
 
-    opbtn = Button(open_wd, text="Open", height=2, width=10, command=lambda: __commit__(path.get()+prtype.get(), "r", data, open_wd))
+    opbtn = Button(open_wd, text="Open", height=2, width=10, command=lambda: __commit__(path.get()+prtype.get(), "r",data, open_wd))
     opbtn.place(x=190, y=100)
+
+    clbtn = Button(open_wd, text="Cancel", height=2, width=10, command=lambda: open_wd.destroy())
+    clbtn.place(x=290, y=100)
 
 #This Function is to save the current content of a file.
 def __save__(data, svflg):
-    global FILE
+    global FILE,LIST
     #svflg is a Flag used to differentiate Save and SaveAs
     if FILE is not None and svflg is True:
-        __commit__(FILE, "w", data)
+        __commit__(FILE, "w",data)
     else:
         sav_wd = Tk()
-        sav_wd.geometry('300x150')
+        sav_wd.geometry('400x150')
         sav_wd.title("Save")
 
         # Takes addresss from user 
         lbl1 = Label(sav_wd, text='Path:')
         lbl1.place(x=20, y=20)
-        path = Entry(sav_wd, width=25)
+        path = tk1.Combobox(sav_wd,width=40)
+        path['values'] = tuple(LIST)
+        path.current()
         path.configure(font='Arial 10')
         path.place(x=60, y=20)
 
@@ -79,8 +91,11 @@ def __save__(data, svflg):
         prtype.place(x=60, y=50)
 
         #Save Button to save
-        savbtn = Button(sav_wd, text="Save", height=2, width=10, command=lambda: __commit__(path.get()+prtype.get(), "w", data, sav_wd))
+        savbtn = Button(sav_wd, text="Save", height=2, width=10, command=lambda: __commit__(path.get()+prtype.get(), "w",data,sav_wd))
         savbtn.place(x=190, y=100)
+
+        clbtn = Button(sav_wd, text="Cancel", height=2, width=10, command=lambda: sav_wd.destroy())
+        clbtn.place(x=290, y=100)
 
 #This function sets the requested setting choice by the user.
 def __setf__(font, size, data):
@@ -92,8 +107,8 @@ def __setf__(font, size, data):
         data.configure(font=(font.strip(), size.strip()), width=100, height=80)
         
     elif(size=='20' or size.strip()=='20'):
-        print(size=='20')
-        print(size.strip()=='20')
+        #print(size=='20')
+        #print(size.strip()=='20')
         data.configure(font=(font.strip(), size.strip()), width=47, height=20)
 
     elif(size=='30' or size.strip()=='30'):
@@ -154,7 +169,7 @@ def main():
 
     root.mainloop()
         
-
+LIST = []
 FILE = None
 FONT = 'Arial'
 SIZE = '10'
