@@ -19,11 +19,13 @@ def __commit__(file, com,data=None, obj=None):
                 fi_1.write(line+"\n")
         fi_1.write(data.get("1.0", tk.END))                
     elif com == 'r':
+        n=2
         data.delete('1.0', tk.END)
         FILE = file
         lines = fi_1.readlines()
-        #print(lines)
-        for i in range(2, len(lines)):
+        if ".txt" not in FILE :
+            n=0
+        for i in range(n, len(lines)):
             data.insert(tk.END, lines[i])
 
         if (data is not None) and (".txt" in FILE) :
