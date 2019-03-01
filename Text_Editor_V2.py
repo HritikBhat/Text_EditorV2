@@ -23,7 +23,7 @@ def __commit__(file, com,data=None, obj=None):
         data.delete('1.0', tk.END)
         FILE = file
         lines = fi_1.readlines()
-        if ".txt" not in FILE :
+        if ".txt" not in FILE and lines[0] in FONTLIST:
             n=0
         for i in range(n, len(lines)):
             data.insert(tk.END, lines[i])
@@ -140,7 +140,7 @@ def main():
     global S, F
     font = tk1.Combobox(root)
     F = font
-    font['values'] = ('Arial', 'Algerian', 'Aharoni', 'Arial Black', 'Calibri', 'Impact')
+    font['values'] = tuple(FONTLIST)
     font.current(0)
     font.place(x=150, y=80)
 
@@ -170,7 +170,8 @@ def main():
     saveas_btn.place(x=480, y=10)
 
     root.mainloop()
-        
+
+FONTLIST=['Arial', 'Algerian', 'Aharoni', 'Arial Black', 'Calibri', 'Impact']
 LIST = []
 FILE = None
 FONT = 'Arial'
