@@ -28,7 +28,7 @@ def __commit__(file, com,data=None, obj=None):
         for i in range(n, len(lines)):
             data.insert(tk.END, lines[i])
 
-        if (data is not None) and (".txt" in FILE) :
+        if (data is not None) and (".txt" in FILE) and lines[0] in FONTLIST :
             __setf__(lines[0], lines[1], data)
         else:
             __setf__("Arial","20",data)
